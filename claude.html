@@ -4,7 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Аналіз 20 сфер · Ольга Моторна</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>Аналіз 20 сфер життя · Ольга Моторна</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -27,6 +28,7 @@
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);font-family:'Jost',sans-serif;color:var(--text);min-height:100vh}
+
 
 /* SCREENS */
 .screen{display:none;min-height:100vh}
@@ -399,6 +401,23 @@ box-shadow:0 4px 20px rgba(201,169,110,.2);
       <div class="stat"><div class="stat-val" style="font-size:24px;padding-top:4px">~7</div><div class="stat-lbl">хвилин</div></div>
       <div class="stat"><div class="stat-val">∞</div><div class="stat-lbl">щомісяця</div></div>
     </div>
+
+<script>
+function startTest() {
+    const tg = window.Telegram.WebApp;
+
+    tg.ready();
+
+    const payload = {
+        action: "start_test",
+        time: Date.now()
+    };
+
+    // отправка в бота
+    tg.sendData(JSON.stringify(payload));
+}
+</script>
+
     <button class="btn-start" onclick="startTest()">Почати аналіз</button>
     <button class="btn-ghost" id="btn-hist" style="display:none" onclick="viewLast()">Мої попередні результати</button>
     <div class="intro-footer">
@@ -543,14 +562,29 @@ SPHERES.forEach((s,i)=>{
 
 let scores=new Array(20).fill(0), catI=0;
 
+const TG_BOT_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN';
+const TG_CHAT_ID = 'YOUR_CHAT_ID';
+
 const save=()=>{const h=JSON.parse(localStorage.getItem('om20')||'[]');h.push({d:new Date().toISOString(),s:[...scores]});localStorage.setItem('om20',JSON.stringify(h));};
 const getH=()=>JSON.parse(localStorage.getItem('om20')||'[]');
+
+function sendTelegramMessage(text){
+  if(!TG_BOT_TOKEN||!TG_CHAT_ID||TG_BOT_TOKEN.includes('YOUR')||TG_CHAT_ID.includes('YOUR')) return;
+  const url = `https://api.telegram.org/bot${encodeURIComponent(TG_BOT_TOKEN)}/sendMessage?chat_id=${encodeURIComponent(TG_CHAT_ID)}&text=${encodeURIComponent(text)}`;
+  fetch(url, { method: 'GET', mode: 'no-cors' }).catch(()=>{});
+}
 
 function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
 function goIntro(){document.getElementById('btn-hist').style.display=getH().length?'block':'none';show('s-intro');}
 function viewLast(){const h=getH();if(h.length){scores=h[h.length-1].s;showResults(false);}}
 
-function startTest(){scores=new Array(20).fill(0);catI=0;show('s-test');renderCat();}
+function startTest(){
+  scores=new Array(20).fill(0);
+  catI=0;
+  show('s-test');
+  renderCat();
+  sendTelegramMessage(`Користувач почав аналіз: ${new Date().toLocaleString('uk-UA')} | ${window.location.href}`);
+}
 
 function renderCat(){
   const cat=CATS[catI];
