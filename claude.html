@@ -4,23 +4,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!-- Telegram Web App script enables integration with Telegram's platform -->
+<script src="https://telegram.org/js/telegram-web-app.js" onerror="document.body.insertAdjacentHTML('afterbegin', '<div style=&quot;background:#d4845f;color:#fff;padding:12px;text-align:center;font-size:14px;&quot;>Не вдалося підключити Telegram Web App. Перевірте підключення до Інтернету.</div>');"></script>
 <script>
 function startTest() {
-    const tg = window.Telegram.WebApp;
+    if (window.Telegram && window.Telegram.WebApp) {
+        const tg = window.Telegram.WebApp;
+        tg.ready();
 
-    tg.ready();
+        const payload = {
+            action: "start_test",
+            time: Date.now()
+        };
 
-    const payload = {
-        action: "start_test",
-        time: Date.now()
-    };
-
-    // отправка в бота
-    tg.sendData(JSON.stringify(payload));
+        // отправка в бота
+    // надсилання в бота
+    } else {
+        alert("Telegram WebApp API недоступний. Відкрийте цю сторінку у Telegram.");
+    }
 }
 </script>
-<title>Аналіз 20 сфер життя. · Ольга Моторна</title>
+
+<title>Аналіз 20 сфер життя · Ольга Моторна</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -404,7 +409,7 @@ box-shadow:0 4px 20px rgba(201,169,110,.2);
   <div class="intro-inner">
     <div class="brand-tag">Ольга Моторна · Інструмент коучингу</div>
     <div class="intro-name">motorna_coach</div>
-    <h1 class="intro-title">Де ти зараз<br>насправді <em>є???</em></h1>
+    <h1 class="intro-title">Де ти зараз<br>насправді <em>є??</em></h1>
     <div class="intro-tagline">Мислення · Результат · Свобода</div>
     <div class="intro-divider"></div>
     <p class="intro-desc">
